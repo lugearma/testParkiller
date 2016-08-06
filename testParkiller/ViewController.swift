@@ -11,6 +11,16 @@ import GoogleMaps
 
 class ViewController: UIViewController {
     
+    var locationManager : CLLocationManager?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        locationManager?.requestAlwaysAuthorization()
+    }
+    
     override func loadView() {
         let camera = GMSCameraPosition.cameraWithLatitude(-33.9, longitude: 151.20, zoom: 6.0)
         let mapView = GMSMapView.mapWithFrame(CGRect.zero, camera: camera)
@@ -28,7 +38,21 @@ class ViewController: UIViewController {
         marker.snippet = "Australia"
         marker.map = map
     }
-
-
 }
+
+extension ViewController: CLLocationManagerDelegate {
+    
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        if status == .AuthorizedWhenInUse {
+            print("latitude: \(manager.location?.coordinate.latitude)")
+            print("logintude: \(manager.location?.coordinate.longitude)")
+        }
+    }
+}
+
+
+
+
+
+
 
