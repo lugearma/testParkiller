@@ -25,20 +25,34 @@ class ViewController: UIViewController {
     
     override func loadView() {
         
-        locationManager = CLLocationManager()
-        locationManager?.delegate = self
-        locationManager?.requestAlwaysAuthorization()
+        self.locationManager = CLLocationManager()
+        self.locationManager?.delegate = self
+        self.locationManager?.requestAlwaysAuthorization()
         
-        let userLat = self.locationManager?.location?.coordinate.latitude
-        let userLon = self.locationManager?.location?.coordinate.longitude
+        if CLLocationManager.locationServicesEnabled() {
+            
+            self.locationManager?.desiredAccuracy = kCLLocationAccuracyBest
         
-        self.camera = GMSCameraPosition.cameraWithLatitude(userLat!, longitude: userLon!, zoom: self.zoom)
-        let mapView = GMSMapView.mapWithFrame(CGRect.zero, camera: self.camera!)
-        
-        mapView.myLocationEnabled = true
-        self.view = mapView
-        
-        //createMarker(mapView, latitude: userLat!, longitude: userLon!)
+            let userLat = self.locationManager?.location?.coordinate.latitude
+            let userLon = self.locationManager?.location?.coordinate.longitude
+            
+            self.camera = GMSCameraPosition.cameraWithLatitude(userLat!, longitude: userLon!, zoom: self.zoom)
+            let mapView = GMSMapView.mapWithFrame(CGRect.zero, camera: self.camera!)
+            
+            mapView.myLocationEnabled = true
+            self.view = mapView
+
+        } else {
+            self.showModal()
+        }
+    }
+    
+    func showModal() {
+        let alert = UIAlertController(title: "Error", message: "A problem has ocurred", preferredStyle: .Alert)
+        let action = UIAlertAction(title: "Ok", style: .Default, handler: {_ in self.navigationController?.popViewControllerAnimated(true)
+        })
+        alert.addAction(action)
+        self.presentViewController(alert, animated: true, completion: nil)
     }
     
     func createMarker(map: GMSMapView, latitude lat: CLLocationDegrees, longitude lon: CLLocationDegrees) {
