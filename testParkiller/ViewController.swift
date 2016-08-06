@@ -42,11 +42,24 @@ class ViewController: UIViewController {
         return searchBar
     }
     
-    func showModal(message: String) {
+    func showAlert(message: String) {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
         let action = UIAlertAction(title: "Ok", style: .Default, handler: nil)
         alert.addAction(action)
         self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    func showActionSheet(closure: (UIAlertAction) -> Void) {
+        let actionSheet = UIAlertController(title: "Confirm marker", message: "Do you want to put marker here?", preferredStyle: .ActionSheet)
+        
+        let confirmButton = UIAlertAction(title: "Confirm", style: .Default, handler: closure)
+        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        UIAlertAction()
+        
+        actionSheet.addAction(confirmButton)
+        actionSheet.addAction(cancelButton)
+        
+        self.presentViewController(actionSheet, animated: true, completion: nil)
     }
     
     func createMarker(map: GMSMapView, latitude lat: CLLocationDegrees, longitude lon: CLLocationDegrees) {
@@ -77,7 +90,7 @@ extension ViewController: CLLocationManagerDelegate {
             
             self.locationManager?.startUpdatingLocation()
         } else {
-            self.showModal("Otorga permisos de geolocalizacion")
+            self.showAlert("Otorga permisos de geolocalizacion")
         }
     }
     
@@ -94,7 +107,12 @@ extension ViewController: CLLocationManagerDelegate {
 extension ViewController: GMSMapViewDelegate {
     
     func mapView(mapView: GMSMapView, didTapAtCoordinate coordinate: CLLocationCoordinate2D) {
-        self.createMarker(self.mapView, latitude: coordinate.latitude, longitude: coordinate.longitude)
+        self.showActionSheet({
+            action in
+            self.createMarker(self.mapView, latitude: coordinate.latitude, longitude: coordinate.longitude)
+        })
+        
+        
         
         let startPoint = CLLocationCoordinate2D(latitude: self.userLat!, longitude: self.userLon!)
         
