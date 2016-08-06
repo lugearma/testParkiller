@@ -24,13 +24,10 @@ class ViewController: UIViewController {
         
         self.locationManager = CLLocationManager()
         self.locationManager?.delegate = self
-//        self.locationManager?.requestWhenInUseAuthorization()
         self.locationManager?.requestAlwaysAuthorization()
         
         self.userLat = self.locationManager?.location?.coordinate.latitude
         self.userLon = self.locationManager?.location?.coordinate.longitude
-
-        print("\(userLat), \(userLon)")
 
     }
     
@@ -45,10 +42,9 @@ class ViewController: UIViewController {
         return searchBar
     }
     
-    func showModal() {
-        let alert = UIAlertController(title: "Error", message: "A problem has ocurred", preferredStyle: .Alert)
-        let action = UIAlertAction(title: "Ok", style: .Default, handler: {_ in self.navigationController?.popViewControllerAnimated(true)
-        })
+    func showModal(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
+        let action = UIAlertAction(title: "Ok", style: .Default, handler: nil)
         alert.addAction(action)
         self.presentViewController(alert, animated: true, completion: nil)
     }
@@ -80,6 +76,8 @@ extension ViewController: CLLocationManagerDelegate {
             self.view = mapView
             
             self.locationManager?.startUpdatingLocation()
+        } else {
+            self.showModal("Otorga permisos de geolocalizacion")
         }
     }
     
