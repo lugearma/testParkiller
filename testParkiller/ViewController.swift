@@ -13,15 +13,8 @@ class ViewController: UIViewController {
     
     var locationManager : CLLocationManager?
     var camera: GMSCameraPosition?
+    var mapView: GMSMapView!
     let zoom: Float = 15.0
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    
-//        locationManager = CLLocationManager()
-//        locationManager?.delegate = self
-//        locationManager?.requestAlwaysAuthorization()
-    }
     
     override func loadView() {
         
@@ -37,13 +30,16 @@ class ViewController: UIViewController {
             let userLon = self.locationManager?.location?.coordinate.longitude
             
             self.camera = GMSCameraPosition.cameraWithLatitude(userLat!, longitude: userLon!, zoom: self.zoom)
-            let mapView = GMSMapView.mapWithFrame(CGRect.zero, camera: self.camera!)
+            self.mapView = GMSMapView.mapWithFrame(CGRect.zero, camera: self.camera!)
             
-            mapView.myLocationEnabled = true
+            self.mapView.delegate = self
+            self.mapView.myLocationEnabled = true
+            
             self.view = mapView
 
         } else {
-            self.showModal()
+            print("En problemas :(")
+//            self.showModal()
         }
     }
     
@@ -58,8 +54,8 @@ class ViewController: UIViewController {
     func createMarker(map: GMSMapView, latitude lat: CLLocationDegrees, longitude lon: CLLocationDegrees) {
         let marker = GMSMarker()
         marker.position = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-        marker.title = "Sidney"
-        marker.snippet = "Australia"
+//        marker.title = "Sidney"
+//        marker.snippet = "Australia"
         marker.map = map
     }
 }
@@ -77,6 +73,12 @@ extension ViewController: CLLocationManagerDelegate {
         let lon = locations.first?.coordinate.longitude
         print("Location: \(lat), \(lon)")
         self.camera = GMSCameraPosition.cameraWithLatitude(lat!, longitude: lon!, zoom: self.zoom)
+    }
+}
+
+extension ViewController: GMSMapViewDelegate {
+    func mapView(mapView: GMSMapView, didTapAtCoordinate coordinate: CLLocationCoordinate2D) {
+        self.createMarker(self.mapView, latitude: coordinate.latitude, longitude: coordinate.longitude)
     }
 }
 
