@@ -45,22 +45,29 @@ class ViewController: UIViewController {
         
         let viewFrame = CGRect(x: 0.0, y: self.view.frame.height, width: self.view.frame.width, height: 100.0)
         
+        //Blur effect
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Light)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+
+        blurEffectView.frame = self.view.bounds
+        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        
         self.informationView = UIView(frame: viewFrame)
-        self.informationView.backgroundColor = UIColor.redColor()
+        self.informationView.addSubview(blurEffectView)
         
         self.distanceLabel = UILabel(frame: CGRect(x: 0.0, y: 10.0, width: self.view.frame.width, height: 21))
         self.messageLabel = UILabel(frame: CGRect(x: 0.0, y: 40.0, width: self.view.frame.width, height: 21))
         
         if let dLabel = self.distanceLabel {
             dLabel.textAlignment = NSTextAlignment.Center
-            dLabel.textColor = UIColor.whiteColor()
+            dLabel.textColor = UIColor.darkGrayColor()
             dLabel.text = "Distance: "
             self.informationView.addSubview(dLabel)
         }
         
         if let msgLabel = self.messageLabel {
             msgLabel.textAlignment = .Center
-            msgLabel.textColor = UIColor.whiteColor()
+            msgLabel.textColor = UIColor.darkGrayColor()
             self.informationView.addSubview(msgLabel)
         }
 
@@ -203,10 +210,10 @@ extension ViewController: GMSMapViewDelegate {
                 self.markerState = true
                 
                 self.createInformationView()
-                self.createCircleArea(self.markerPoint!, radius: 200, color: UIColor.redColor().colorWithAlphaComponent(0.5))
-                self.createCircleArea(self.markerPoint!, radius: 100, color: UIColor.blueColor().colorWithAlphaComponent(0.5))
-                self.createCircleArea(self.markerPoint!, radius: 50, color: UIColor.brownColor().colorWithAlphaComponent(0.5))
-                self.createCircleArea(self.markerPoint!, radius: 10, color: UIColor.whiteColor().colorWithAlphaComponent(0.5))
+                self.createCircleArea(self.markerPoint!, radius: 200, color: UIColor.blackColor().colorWithAlphaComponent(0.2))
+                self.createCircleArea(self.markerPoint!, radius: 100, color: UIColor.blackColor().colorWithAlphaComponent(0.4))
+                self.createCircleArea(self.markerPoint!, radius: 50, color: UIColor.blackColor().colorWithAlphaComponent(0.6))
+                self.createCircleArea(self.markerPoint!, radius: 10, color: UIColor.blackColor().colorWithAlphaComponent(0.8))
             })
         }
     }
