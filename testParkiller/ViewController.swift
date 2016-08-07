@@ -23,11 +23,11 @@ class ViewController: UIViewController {
     var markerPoint: CLLocationCoordinate2D?
     
     var informationView: UIView!
+    var distanceLabel: UILabel?
+    var messageLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        self.mapView = GMSMapView(frame: self.view.bounds)
         
         self.locationManager = CLLocationManager()
         self.locationManager?.delegate = self
@@ -35,15 +35,21 @@ class ViewController: UIViewController {
         
         self.userLatitude = self.locationManager?.location?.coordinate.latitude
         self.userLongitude = self.locationManager?.location?.coordinate.longitude
-//        self.view.addSubview(mapView)
-//        self.createView()
     }
     
     func createInformationView() {
         
-        let viewFrame = CGRect(x: 0.0, y: 0.0, width: self.view.frame.width, height: 100.0)
+        let viewFrame = CGRect(x: 0.0, y: self.view.frame.height - 100, width: self.view.frame.width, height: 100.0)
         self.informationView = UIView(frame: viewFrame)
         self.informationView.backgroundColor = UIColor.redColor()
+        
+        self.distanceLabel = UILabel(frame: CGRect(x: 0.0, y: 10.0, width: self.view.frame.width, height: 21))
+        
+        if let label = distanceLabel {
+            label.textAlignment = NSTextAlignment.Center
+            label.textColor = UIColor.whiteColor()
+            self.informationView.addSubview(label)
+        }
         
         self.view.addSubview(informationView)
     }
@@ -120,12 +126,20 @@ extension ViewController: CLLocationManagerDelegate {
         if self.markerState {
             let userPoint = CLLocationCoordinate2D(latitude: self.userLatitude!, longitude: self.userLongitude!)
             
-            let distance = GMSGeometryDistance(userPoint, self.markerPoint!)
+            let distance = roundValue(GMSGeometryDistance(userPoint, self.markerPoint!))
+            
+            if let label = self.distanceLabel {
+                label.text = "Distance: \(distance) m"
+            }
             
             print("Disance: \(distance) m")
         }
         
         self.camera = GMSCameraPosition.cameraWithLatitude(self.userLatitude!, longitude: self.userLongitude!, zoom: self.zoom)
+    }
+    
+    func roundValue(value: Double) -> Double {
+        return Double(round(10*value)/10)
     }
 }
 
