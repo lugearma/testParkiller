@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     var camera: GMSCameraPosition?
     var mapView: GMSMapView!
     let zoom: Float = 15.0
+    var markerState = false
     
     var userLat: CLLocationDegrees?
     var userLon: CLLocationDegrees?
@@ -42,19 +43,18 @@ class ViewController: UIViewController {
         return searchBar
     }
     
-    func showAlert(message: String) {
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         let action = UIAlertAction(title: "Ok", style: .Default, handler: nil)
         alert.addAction(action)
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
-    func showActionSheet(closure: (UIAlertAction) -> Void) {
-        let actionSheet = UIAlertController(title: "Confirm marker", message: "Do you want to put marker here?", preferredStyle: .ActionSheet)
+    func showActionSheet(title: String, message: String, text: String,action: (UIAlertAction) -> Void) {
+        let actionSheet = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
         
-        let confirmButton = UIAlertAction(title: "Confirm", style: .Default, handler: closure)
+        let confirmButton = UIAlertAction(title: text, style: .Default, handler: action)
         let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        UIAlertAction()
         
         actionSheet.addAction(confirmButton)
         actionSheet.addAction(cancelButton)
@@ -90,7 +90,7 @@ extension ViewController: CLLocationManagerDelegate {
             
             self.locationManager?.startUpdatingLocation()
         } else {
-            self.showAlert("Otorga permisos de geolocalizacion")
+            self.showAlert("Error", message: "An error has occurred")
         }
     }
     
@@ -107,12 +107,15 @@ extension ViewController: CLLocationManagerDelegate {
 extension ViewController: GMSMapViewDelegate {
     
     func mapView(mapView: GMSMapView, didTapAtCoordinate coordinate: CLLocationCoordinate2D) {
-        self.showActionSheet({
-            action in
-            self.createMarker(self.mapView, latitude: coordinate.latitude, longitude: coordinate.longitude)
-        })
-        
-        
+        if !self.markerState {
+            self.showActionSheet("Confirm",message: "Do you want to put a marker here?", text: "Confirm",action: {
+                action in
+                self.createMarker(self.mapView, latitude: coordinate.latitude, longitude: coordinate.longitude)
+                self.markerState = true
+            })
+        } else {
+            print("Esta puesto")
+        }
         
         let startPoint = CLLocationCoordinate2D(latitude: self.userLat!, longitude: self.userLon!)
         
@@ -122,6 +125,17 @@ extension ViewController: GMSMapViewDelegate {
         
         print("Distance: \(distance) m")
         
+    }
+    
+    func mapView(mapView: GMSMapView, didTapMarker marker: GMSMarker) -> Bool {
+        
+        self.showActionSheet("Delete", message: "Do you want delete the selected marker?", text: "Delete", action: {
+            action in
+            mapView.clear()
+            self.markerState = false
+        })
+        
+        return true
     }
 }
 
