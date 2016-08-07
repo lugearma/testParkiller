@@ -166,6 +166,7 @@ extension ViewController: CLLocationManagerDelegate {
     func getMessage(distance: Double) -> String {
         switch distance {
             case 0.0..<10.0:
+                //Send "tuit"
                 return "Estas en el punto objetivo"
             
             case 10.0..<50.0:
@@ -202,6 +203,10 @@ extension ViewController: GMSMapViewDelegate {
                 self.markerState = true
                 
                 self.createInformationView()
+                self.createCircleArea(self.markerPoint!, radius: 200, color: UIColor.redColor().colorWithAlphaComponent(0.5))
+                self.createCircleArea(self.markerPoint!, radius: 100, color: UIColor.blueColor().colorWithAlphaComponent(0.5))
+                self.createCircleArea(self.markerPoint!, radius: 50, color: UIColor.brownColor().colorWithAlphaComponent(0.5))
+                self.createCircleArea(self.markerPoint!, radius: 10, color: UIColor.whiteColor().colorWithAlphaComponent(0.5))
             })
         }
     }
@@ -217,6 +222,13 @@ extension ViewController: GMSMapViewDelegate {
             self.removeInformationView()
         })
         return true
+    }
+    
+    func createCircleArea(center: CLLocationCoordinate2D, radius: Double, color: UIColor) {
+        let circle = GMSCircle(position: center, radius: radius)
+        circle.fillColor = color
+        circle.strokeWidth = 0
+        circle.map = mapView
     }
     
     func removeInformationView() {
