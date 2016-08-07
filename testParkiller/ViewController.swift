@@ -26,6 +26,10 @@ class ViewController: UIViewController {
     var distanceLabel: UILabel?
     var messageLabel: UILabel!
     
+    let duration = 0.4
+    let delay = 0.0
+    let options = UIViewAnimationOptions.CurveEaseInOut
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -40,10 +44,6 @@ class ViewController: UIViewController {
     func createInformationView() {
         
         let viewFrame = CGRect(x: 0.0, y: self.view.frame.height, width: self.view.frame.width, height: 100.0)
-        
-        let duration = 0.5
-        let delay = 0.0
-        let options = UIViewAnimationOptions.CurveEaseInOut
         
         self.informationView = UIView(frame: viewFrame)
         self.informationView.backgroundColor = UIColor.redColor()
@@ -66,10 +66,13 @@ class ViewController: UIViewController {
 
         self.view.addSubview(informationView)
         
-        UIView.animateWithDuration(duration, delay: delay, options: options
-            , animations: {
+        self.animateInformationView(self.duration, delay: self.delay, options: self.options, animations: {
             self.informationView.frame = CGRect(x: 0.0, y: self.view.frame.height - 100, width: self.view.frame.width, height: 100.0)
             }, completion: nil)
+    }
+    
+    func animateInformationView(duration: NSTimeInterval, delay: NSTimeInterval, options: UIViewAnimationOptions, animations: () -> Void, completion: ((Bool) -> Void)?) {
+        UIView.animateWithDuration(duration, delay: delay, options: options, animations: animations, completion: completion)
     }
     
     func createSearchBar() -> UIView{
@@ -210,20 +213,20 @@ extension ViewController: GMSMapViewDelegate {
             action in
             mapView.clear()
             self.markerState = false
-            
-//            self.informationView.removeFromSuperview()
+    
             self.removeInformationView()
         })
         return true
     }
     
     func removeInformationView() {
-        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
-                self.informationView.frame = CGRect(x: 0.0, y: self.view.frame.height, width: self.view.frame.width, height: 100)
+        
+        self.animateInformationView(self.duration, delay: self.delay, options: self.options, animations: {
+            self.informationView.frame = CGRect(x: 0.0, y: self.view.frame.height, width: self.view.frame.width, height: 100)
             }, completion: {
                 completion in
                 self.informationView.removeFromSuperview()
-        })
+            })
     }
 }
 
