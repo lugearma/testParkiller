@@ -22,8 +22,12 @@ class ViewController: UIViewController {
     
     var markerPoint: CLLocationCoordinate2D?
     
+    var informationView: UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        self.mapView = GMSMapView(frame: self.view.bounds)
         
         self.locationManager = CLLocationManager()
         self.locationManager?.delegate = self
@@ -31,7 +35,17 @@ class ViewController: UIViewController {
         
         self.userLatitude = self.locationManager?.location?.coordinate.latitude
         self.userLongitude = self.locationManager?.location?.coordinate.longitude
-
+//        self.view.addSubview(mapView)
+//        self.createView()
+    }
+    
+    func createInformationView() {
+        
+        let viewFrame = CGRect(x: 0.0, y: 0.0, width: self.view.frame.width, height: 100.0)
+        self.informationView = UIView(frame: viewFrame)
+        self.informationView.backgroundColor = UIColor.redColor()
+        
+        self.view.addSubview(informationView)
     }
     
     func createSearchBar() -> UIView{
@@ -128,6 +142,8 @@ extension ViewController: GMSMapViewDelegate {
                 self.createMarker(self.mapView, latitude: coordinate.latitude, longitude: coordinate.longitude)
                 self.markerPoint = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
                 self.markerState = true
+                
+                self.createInformationView()
             })
         }
     }
@@ -139,6 +155,8 @@ extension ViewController: GMSMapViewDelegate {
             action in
             mapView.clear()
             self.markerState = false
+            
+            self.informationView.removeFromSuperview()
         })
         return true
     }
