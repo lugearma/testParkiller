@@ -92,7 +92,7 @@ extension ViewController: CLLocationManagerDelegate {
             
             self.locationManager?.startUpdatingLocation()
         } else {
-            self.showAlert("Error", message: "An error has occurred")
+//            self.showAlert("Error", message: "An error has occurred")
         }
     }
     
