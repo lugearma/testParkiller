@@ -44,11 +44,18 @@ class ViewController: UIViewController {
         self.informationView.backgroundColor = UIColor.redColor()
         
         self.distanceLabel = UILabel(frame: CGRect(x: 0.0, y: 10.0, width: self.view.frame.width, height: 21))
+        self.messageLabel = UILabel(frame: CGRect(x: 0.0, y: 40.0, width: self.view.frame.width, height: 21))
         
-        if let label = distanceLabel {
-            label.textAlignment = NSTextAlignment.Center
-            label.textColor = UIColor.whiteColor()
-            self.informationView.addSubview(label)
+        if let dLabel = self.distanceLabel {
+            dLabel.textAlignment = NSTextAlignment.Center
+            dLabel.textColor = UIColor.whiteColor()
+            self.informationView.addSubview(dLabel)
+        }
+        
+        if let msgLabel = self.messageLabel {
+            msgLabel.textAlignment = .Center
+            msgLabel.textColor = UIColor.whiteColor()
+            self.informationView.addSubview(msgLabel)
         }
         
         self.view.addSubview(informationView)
@@ -128,14 +135,37 @@ extension ViewController: CLLocationManagerDelegate {
             
             let distance = roundValue(GMSGeometryDistance(userPoint, self.markerPoint!))
             
-            if let label = self.distanceLabel {
-                label.text = "Distance: \(distance) m"
+            if let dLabel = self.distanceLabel {
+                dLabel.text = "Distance: \(distance) m"
+            }
+            
+            if let msgLabel = self.messageLabel {
+                msgLabel.text = getMessage(distance)
             }
             
             print("Disance: \(distance) m")
         }
         
         self.camera = GMSCameraPosition.cameraWithLatitude(self.userLatitude!, longitude: self.userLongitude!, zoom: self.zoom)
+    }
+    
+    func getMessage(distance: Double) -> String {
+        switch distance {
+            case 0.0..<10.0:
+                return "Estas en el punto objetivo"
+            
+            case 10.0..<50.0:
+                return "Estas muy proximo al punto objetivo"
+            
+            case 50.0..<100.0:
+                return "Estas proximo al punto objetivo"
+            
+            case 100.0..<200.0:
+                return "Estas lejos del punto objetivo"
+            
+            default:
+                return "Estas muy lejos del punto objetivo"
+        }
     }
     
     func roundValue(value: Double) -> Double {
