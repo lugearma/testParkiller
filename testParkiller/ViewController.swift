@@ -17,8 +17,10 @@ class ViewController: UIViewController {
     let zoom: Float = 15.0
     var markerState = false
     
-    var userLat: CLLocationDegrees?
-    var userLon: CLLocationDegrees?
+    var userLatitude: CLLocationDegrees?
+    var userLongitude: CLLocationDegrees?
+    
+    var markerPoint: CLLocationCoordinate2D?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,8 +29,8 @@ class ViewController: UIViewController {
         self.locationManager?.delegate = self
         self.locationManager?.requestAlwaysAuthorization()
         
-        self.userLat = self.locationManager?.location?.coordinate.latitude
-        self.userLon = self.locationManager?.location?.coordinate.longitude
+        self.userLatitude = self.locationManager?.location?.coordinate.latitude
+        self.userLongitude = self.locationManager?.location?.coordinate.longitude
 
     }
     
@@ -50,10 +52,10 @@ class ViewController: UIViewController {
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
-    func showActionSheet(title: String, message: String, text: String,action: (UIAlertAction) -> Void) {
+    func showActionSheet(title: String, message: String, textButton: String,action: (UIAlertAction) -> Void) {
         let actionSheet = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
         
-        let confirmButton = UIAlertAction(title: text, style: .Default, handler: action)
+        let confirmButton = UIAlertAction(title: textButton, style: .Default, handler: action)
         let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
         
         actionSheet.addAction(confirmButton)
@@ -76,10 +78,10 @@ extension ViewController: CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         if status == .AuthorizedAlways {
             
-            self.userLat = self.locationManager?.location?.coordinate.latitude
-            self.userLon = self.locationManager?.location?.coordinate.longitude
+            self.userLatitude = self.locationManager?.location?.coordinate.latitude
+            self.userLongitude = self.locationManager?.location?.coordinate.longitude
             
-            self.camera = GMSCameraPosition.cameraWithLatitude(userLat!, longitude: userLon!, zoom: self.zoom)
+            self.camera = GMSCameraPosition.cameraWithLatitude(userLatitude!, longitude: userLongitude!, zoom: self.zoom)
             
             self.mapView = GMSMapView.mapWithFrame(CGRect.zero, camera: self.camera!)
             
@@ -95,10 +97,21 @@ extension ViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        self.userLat = locations.first?.coordinate.latitude
-        self.userLon = locations.first?.coordinate.longitude
-        print("Location: \(self.userLat!), \(self.userLon!)")
-        self.camera = GMSCameraPosition.cameraWithLatitude(self.userLat!, longitude: self.userLon!, zoom: self.zoom)
+        
+        self.userLatitude = locations.first?.coordinate.latitude
+        self.userLongitude = locations.first?.coordinate.longitude
+        print("Location: \(self.userLatitude!), \(self.userLongitude!)")
+        
+        // is marker in map?
+        if self.markerState {
+            let userPoint = CLLocationCoordinate2D(latitude: self.userLatitude!, longitude: self.userLongitude!)
+            
+            let distance = GMSGeometryDistance(userPoint, self.markerPoint!)
+            
+            print("Disance: \(distance) m")
+        }
+        
+        self.camera = GMSCameraPosition.cameraWithLatitude(self.userLatitude!, longitude: self.userLongitude!, zoom: self.zoom)
     }
 }
 
@@ -107,34 +120,26 @@ extension ViewController: CLLocationManagerDelegate {
 extension ViewController: GMSMapViewDelegate {
     
     func mapView(mapView: GMSMapView, didTapAtCoordinate coordinate: CLLocationCoordinate2D) {
+        
+        // Create marker
         if !self.markerState {
-            self.showActionSheet("Confirm",message: "Do you want to put a marker here?", text: "Confirm",action: {
+            self.showActionSheet("Confirm",message: "Do you want to put a marker here?", textButton: "Confirm",action: {
                 action in
                 self.createMarker(self.mapView, latitude: coordinate.latitude, longitude: coordinate.longitude)
+                self.markerPoint = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
                 self.markerState = true
             })
-        } else {
-            print("Esta puesto")
         }
-        
-        let startPoint = CLLocationCoordinate2D(latitude: self.userLat!, longitude: self.userLon!)
-        
-        let finalPoint = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        
-        let distance = GMSGeometryDistance(startPoint, finalPoint)
-        
-        print("Distance: \(distance) m")
-        
     }
     
     func mapView(mapView: GMSMapView, didTapMarker marker: GMSMarker) -> Bool {
         
-        self.showActionSheet("Delete", message: "Do you want delete the selected marker?", text: "Delete", action: {
+        // Delete marker
+        self.showActionSheet("Delete", message: "Do you want to delete the selected marker?", textButton: "Delete", action: {
             action in
             mapView.clear()
             self.markerState = false
         })
-        
         return true
     }
 }
