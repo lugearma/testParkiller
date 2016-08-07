@@ -39,7 +39,12 @@ class ViewController: UIViewController {
     
     func createInformationView() {
         
-        let viewFrame = CGRect(x: 0.0, y: self.view.frame.height - 100, width: self.view.frame.width, height: 100.0)
+        let viewFrame = CGRect(x: 0.0, y: self.view.frame.height, width: self.view.frame.width, height: 100.0)
+        
+        let duration = 0.5
+        let delay = 0.0
+        let options = UIViewAnimationOptions.CurveEaseInOut
+        
         self.informationView = UIView(frame: viewFrame)
         self.informationView.backgroundColor = UIColor.redColor()
         
@@ -49,6 +54,7 @@ class ViewController: UIViewController {
         if let dLabel = self.distanceLabel {
             dLabel.textAlignment = NSTextAlignment.Center
             dLabel.textColor = UIColor.whiteColor()
+            dLabel.text = "Distance: "
             self.informationView.addSubview(dLabel)
         }
         
@@ -57,8 +63,13 @@ class ViewController: UIViewController {
             msgLabel.textColor = UIColor.whiteColor()
             self.informationView.addSubview(msgLabel)
         }
-        
+
         self.view.addSubview(informationView)
+        
+        UIView.animateWithDuration(duration, delay: delay, options: options
+            , animations: {
+            self.informationView.frame = CGRect(x: 0.0, y: self.view.frame.height - 100, width: self.view.frame.width, height: 100.0)
+            }, completion: nil)
     }
     
     func createSearchBar() -> UIView{
@@ -200,9 +211,19 @@ extension ViewController: GMSMapViewDelegate {
             mapView.clear()
             self.markerState = false
             
-            self.informationView.removeFromSuperview()
+//            self.informationView.removeFromSuperview()
+            self.removeInformationView()
         })
         return true
+    }
+    
+    func removeInformationView() {
+        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+                self.informationView.frame = CGRect(x: 0.0, y: self.view.frame.height, width: self.view.frame.width, height: 100)
+            }, completion: {
+                completion in
+                self.informationView.removeFromSuperview()
+        })
     }
 }
 
