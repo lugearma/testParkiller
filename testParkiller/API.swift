@@ -20,13 +20,9 @@ class API: NSObject {
         UIGraphicsEndImageContext()
         
         return image
-        //Save it to the camera roll
-//        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-        
-//        return image
     }
     
-    class func postToTwitter(mediaID: String) {
+    class func postToTwitter(mediaID: String, message: String) {
         let accountStore = ACAccountStore()
         let accountType = accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
         
@@ -38,12 +34,10 @@ class API: NSObject {
                 if accounts.count > 0 {
                     // This will default to the first account if they have more than one
                     
-//                    let image = API.screenShot(view)
-                    
                     let account = accounts.first as! ACAccount
                     let url = "https://api.twitter.com/1.1/statuses/update.json"
                     let requestURL = NSURL(string: url)
-                    let parameters = ["status" : "Trying my app :P", "display_coordinates": "true", "media_ids": mediaID]
+                    let parameters = ["status" : message, "display_coordinates": "true", "media_ids": mediaID]
                     
                     let request = SLRequest(forServiceType: SLServiceTypeTwitter, requestMethod: SLRequestMethod.POST, URL: requestURL, parameters: parameters)
                     request.account = account
@@ -61,7 +55,7 @@ class API: NSObject {
         }
     }
     
-    class func postImage(view: UIView) {
+    class func postImage(view: UIView, message: String) {
         let accountStore = ACAccountStore()
         let accountType = accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
         
@@ -86,7 +80,7 @@ class API: NSObject {
                     request.performRequestWithHandler({ (data, response, error) in
                         if (response != nil) {
                             
-                            API.parsingData(data)
+                            API.parsingData(data, message: message)
                         } else {
                             print("error")
                         }
@@ -98,28 +92,24 @@ class API: NSObject {
         }
     }
     
-    class func parsingData(data: NSData) -> String {
+    class func parsingData(data: NSData, message: String) {
         
         var mediaStringID: String = "" {
             willSet {
-                API.postToTwitter(newValue)
+                API.postToTwitter(newValue, message: message)
             }
         }
-        
         do {
             let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-            print("JSON: \n \(json)")
+//            print("JSON: \n \(json)")
             if let mediaId = json["media_id_string"] as? String {
                 mediaStringID = mediaId
             } else {
-                print("Algo fallo en el parsing")
-                return ""
+                print("Something's wrong")
             }
         } catch {
             print(error)
         }
-        
-        return ""
     }
     
 

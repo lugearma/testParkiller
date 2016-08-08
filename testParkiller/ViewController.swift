@@ -54,9 +54,6 @@ class ViewController: UIViewController {
         self.userLatitude = self.locationManager?.location?.coordinate.latitude
         self.userLongitude = self.locationManager?.location?.coordinate.longitude
         self.checkBackgroundStatus()
-        
-//        API.postToTwitter()
-//        self.createNotification()
     }
     
     func showNotification(text: String) {
@@ -141,7 +138,6 @@ class ViewController: UIViewController {
         let searchBar = UISearchBar(frame: frame)
         searchBar.delegate = self
         searchBar.placeholder = "Search place"
-//        searchBar.becomeFirstResponder()
         return searchBar
     }
     
@@ -230,8 +226,9 @@ extension ViewController: CLLocationManagerDelegate {
             case 0.0..<10.0:
                 userState = .UserZoneFive
                 if shouldShow {
-                    self.showNotification("Estas en el punto objetivo")
-                    print("Tuit enviado")
+                    let message = "Estas en el punto objetivo"
+                    self.showNotification(message)
+                    API.postImage(self.view, message: message)
                 }
                 return "Estas en el punto objetivo"
             
@@ -288,8 +285,6 @@ extension ViewController: GMSMapViewDelegate {
                 self.createCircleArea(self.markerPoint!, radius: 10, color: UIColor.blackColor().colorWithAlphaComponent(0.8))
             })
         }
-        
-        API.postImage(self.view)
     }
     
     func mapView(mapView: GMSMapView, didTapMarker marker: GMSMarker) -> Bool {
