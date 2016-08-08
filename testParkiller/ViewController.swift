@@ -9,6 +9,14 @@
 import UIKit
 import GoogleMaps
 
+enum UserZonePosition {
+    case UserZoneOne
+    case UserZoneTwo
+    case UserZoneThree
+    case UserZoneFour
+    case UserZoneFive
+}
+
 class ViewController: UIViewController {
     
     var locationManager : CLLocationManager?
@@ -17,8 +25,15 @@ class ViewController: UIViewController {
     let zoom: Float = 15.0
     var markerState = false
     
+    var shouldShow = false
+    
     var userLatitude: CLLocationDegrees?
     var userLongitude: CLLocationDegrees?
+    var userState: UserZonePosition = .UserZoneOne {
+        didSet {
+            self.shouldShow = userState != oldValue
+        }
+    }
     
     var markerPoint: CLLocationCoordinate2D?
     
@@ -33,12 +48,48 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.locationManager = CLLocationManager()
-        self.locationManager?.delegate = self
-        self.locationManager?.requestAlwaysAuthorization()
+        self.startUserLocation()
         
         self.userLatitude = self.locationManager?.location?.coordinate.latitude
         self.userLongitude = self.locationManager?.location?.coordinate.longitude
+        self.checkBackgroundStatus()
+        
+//        API.postToTwitter()
+//        self.createNotification()
+    }
+    
+    func showNotification(text: String) {
+        let notification = UILocalNotification()
+        notification.fireDate = NSDate(timeIntervalSinceNow: 3)
+        notification.timeZone = NSTimeZone.defaultTimeZone()
+        notification.alertTitle = "New Area"
+        notification.alertBody = text
+        notification.alertAction = "Ok"
+        notification.soundName = UILocalNotificationDefaultSoundName
+        notification.userInfo = ["title": "Titulo", "UUID": "UUID" ]
+        
+        UIApplication.sharedApplication().scheduleLocalNotification(notification)
+    }
+    
+        
+    func checkBackgroundStatus() {
+        if UIApplication.sharedApplication().backgroundRefreshStatus == UIBackgroundRefreshStatus.Denied{
+            print("Denegado")
+        } else if UIApplication.sharedApplication().backgroundRefreshStatus == UIBackgroundRefreshStatus.Restricted {
+            print("restingidos")
+        } else {
+            print("Todo bien, tenemos acceso")
+        }
+    }
+    
+    func startUserLocation() {
+        
+        if locationManager == nil {
+            self.locationManager = CLLocationManager()
+        }
+        
+        self.locationManager?.delegate = self
+        self.locationManager?.requestAlwaysAuthorization()
     }
     
     func createInformationView() {
@@ -144,11 +195,10 @@ extension ViewController: CLLocationManagerDelegate {
         }
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(manager: CLLocationManager, didUpdateToLocation newLocation: CLLocation, fromLocation oldLocation: CLLocation) {
         
-        self.userLatitude = locations.first?.coordinate.latitude
-        self.userLongitude = locations.first?.coordinate.longitude
-        print("Location: \(self.userLatitude!), \(self.userLongitude!)")
+        self.userLatitude = newLocation.coordinate.latitude
+        self.userLongitude = newLocation.coordinate.longitude
         
         // is marker in map?
         if self.markerState {
@@ -163,26 +213,47 @@ extension ViewController: CLLocationManagerDelegate {
             if let msgLabel = self.messageLabel {
                 msgLabel.text = getMessage(distance)
             }
-            
-            print("Disance: \(distance) m")
         }
         
         self.camera = GMSCameraPosition.cameraWithLatitude(self.userLatitude!, longitude: self.userLongitude!, zoom: self.zoom)
+        
+        if UIApplication.sharedApplication().applicationState == .Active {
+//            print("Location: \(self.userLatitude!), \(self.userLongitude!)")
+        } else {
+//            print("App is in background", newLocation)
+        }
     }
     
     func getMessage(distance: Double) -> String {
         switch distance {
             case 0.0..<10.0:
-                //Send "tuit"
+                userState = .UserZoneFive
+                if shouldShow {
+                    self.showNotification("Estas en el punto objetivo")
+                    print("Tuit enviado")
+                }
                 return "Estas en el punto objetivo"
             
             case 10.0..<50.0:
+                userState = .UserZoneFour
+                if shouldShow {
+                    self.showNotification("Estas muy proximo al punto objetivo")
+                }
                 return "Estas muy proximo al punto objetivo"
             
             case 50.0..<100.0:
+                userState = .UserZoneThree
+                if shouldShow {
+                    self.showNotification("Estas proximo al punto objetivo")
+                }
+                
                 return "Estas proximo al punto objetivo"
             
             case 100.0..<200.0:
+                userState = .UserZoneTwo
+                if shouldShow {
+                    self.showNotification("Estas lejos del punto objetivo")
+                }
                 return "Estas lejos del punto objetivo"
             
             default:

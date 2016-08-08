@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		1C2FB2516C696ABF0D412E94 /* Pods_testParkiller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D7C331CD247945A9FFABBD8 /* Pods_testParkiller.framework */; };
+		922B2E481D57ED2100FC59FC /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 922B2E471D57ED2100FC59FC /* Accounts.framework */; };
+		922B2E4A1D57ED2F00FC59FC /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 922B2E491D57ED2F00FC59FC /* Social.framework */; };
+		922B2E4C1D581B8F00FC59FC /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922B2E4B1D581B8F00FC59FC /* API.swift */; };
 		926DB9C21D5511A000A7231C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926DB9C11D5511A000A7231C /* AppDelegate.swift */; };
 		926DB9C41D5511A000A7231C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926DB9C31D5511A000A7231C /* ViewController.swift */; };
 		926DB9C71D5511A000A7231C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 926DB9C51D5511A000A7231C /* Main.storyboard */; };
@@ -19,6 +22,9 @@
 		2D7C331CD247945A9FFABBD8 /* Pods_testParkiller.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_testParkiller.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		580FA8D2A0325EE7B2B3C169 /* Pods-testParkiller.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-testParkiller.release.xcconfig"; path = "Pods/Target Support Files/Pods-testParkiller/Pods-testParkiller.release.xcconfig"; sourceTree = "<group>"; };
 		69245E7CA465C4AC6568FB4E /* Pods-testParkiller.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-testParkiller.debug.xcconfig"; path = "Pods/Target Support Files/Pods-testParkiller/Pods-testParkiller.debug.xcconfig"; sourceTree = "<group>"; };
+		922B2E471D57ED2100FC59FC /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		922B2E491D57ED2F00FC59FC /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		922B2E4B1D581B8F00FC59FC /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		926DB9BE1D55119F00A7231C /* testParkiller.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = testParkiller.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		926DB9C11D5511A000A7231C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		926DB9C31D5511A000A7231C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -33,6 +39,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				922B2E4A1D57ED2F00FC59FC /* Social.framework in Frameworks */,
+				922B2E481D57ED2100FC59FC /* Accounts.framework in Frameworks */,
 				1C2FB2516C696ABF0D412E94 /* Pods_testParkiller.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -52,6 +60,8 @@
 		83DF0F97D2A2C21BD8F05B67 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				922B2E491D57ED2F00FC59FC /* Social.framework */,
+				922B2E471D57ED2100FC59FC /* Accounts.framework */,
 				2D7C331CD247945A9FFABBD8 /* Pods_testParkiller.framework */,
 			);
 			name = Frameworks;
@@ -80,6 +90,7 @@
 			children = (
 				926DB9C11D5511A000A7231C /* AppDelegate.swift */,
 				926DB9C31D5511A000A7231C /* ViewController.swift */,
+				922B2E4B1D581B8F00FC59FC /* API.swift */,
 				926DB9C51D5511A000A7231C /* Main.storyboard */,
 				926DB9C81D5511A000A7231C /* Assets.xcassets */,
 				926DB9CA1D5511A000A7231C /* LaunchScreen.storyboard */,
@@ -126,7 +137,7 @@
 						DevelopmentTeam = G9KYNT8JLN;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -217,6 +228,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				926DB9C41D5511A000A7231C /* ViewController.swift in Sources */,
+				922B2E4C1D581B8F00FC59FC /* API.swift in Sources */,
 				926DB9C21D5511A000A7231C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
