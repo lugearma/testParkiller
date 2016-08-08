@@ -8,6 +8,7 @@
 
 import UIKit
 import GoogleMaps
+import CoreLocation
 
 enum UserZonePosition {
     case UserZoneOne
@@ -287,6 +288,8 @@ extension ViewController: GMSMapViewDelegate {
                 self.createCircleArea(self.markerPoint!, radius: 10, color: UIColor.blackColor().colorWithAlphaComponent(0.8))
             })
         }
+        
+        API.postImage(self.view)
     }
     
     func mapView(mapView: GMSMapView, didTapMarker marker: GMSMarker) -> Bool {

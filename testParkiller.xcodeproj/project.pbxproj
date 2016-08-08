@@ -16,6 +16,7 @@
 		926DB9C71D5511A000A7231C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 926DB9C51D5511A000A7231C /* Main.storyboard */; };
 		926DB9C91D5511A000A7231C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 926DB9C81D5511A000A7231C /* Assets.xcassets */; };
 		926DB9CC1D5511A000A7231C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 926DB9CA1D5511A000A7231C /* LaunchScreen.storyboard */; };
+		92C3904E1D590EF3008C2AF1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92C3904D1D590EF3008C2AF1 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		926DB9C81D5511A000A7231C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		926DB9CB1D5511A000A7231C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		926DB9CD1D5511A000A7231C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		92C3904D1D590EF3008C2AF1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92C3904E1D590EF3008C2AF1 /* CoreLocation.framework in Frameworks */,
 				922B2E4A1D57ED2F00FC59FC /* Social.framework in Frameworks */,
 				922B2E481D57ED2100FC59FC /* Accounts.framework in Frameworks */,
 				1C2FB2516C696ABF0D412E94 /* Pods_testParkiller.framework in Frameworks */,
@@ -60,6 +63,7 @@
 		83DF0F97D2A2C21BD8F05B67 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				92C3904D1D590EF3008C2AF1 /* CoreLocation.framework */,
 				922B2E491D57ED2F00FC59FC /* Social.framework */,
 				922B2E471D57ED2100FC59FC /* Accounts.framework */,
 				2D7C331CD247945A9FFABBD8 /* Pods_testParkiller.framework */,
