@@ -53,12 +53,11 @@ class ViewController: UIViewController {
         
         self.userLatitude = self.locationManager?.location?.coordinate.latitude
         self.userLongitude = self.locationManager?.location?.coordinate.longitude
-        self.checkBackgroundStatus()
     }
     
     func showNotification(text: String) {
         let notification = UILocalNotification()
-        notification.fireDate = NSDate(timeIntervalSinceNow: 3)
+        notification.fireDate = NSDate(timeIntervalSinceNow: 0)
         notification.timeZone = NSTimeZone.defaultTimeZone()
         notification.alertTitle = "New Area"
         notification.alertBody = text
@@ -69,17 +68,6 @@ class ViewController: UIViewController {
         UIApplication.sharedApplication().scheduleLocalNotification(notification)
     }
     
-        
-    func checkBackgroundStatus() {
-        if UIApplication.sharedApplication().backgroundRefreshStatus == UIBackgroundRefreshStatus.Denied{
-            print("Denegado")
-        } else if UIApplication.sharedApplication().backgroundRefreshStatus == UIBackgroundRefreshStatus.Restricted {
-            print("restingidos")
-        } else {
-            print("Todo bien, tenemos acceso")
-        }
-    }
-    
     func startUserLocation() {
         
         if locationManager == nil {
@@ -87,6 +75,8 @@ class ViewController: UIViewController {
         }
         
         self.locationManager?.delegate = self
+        self.locationManager?.allowsBackgroundLocationUpdates = true
+        self.locationManager?.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager?.requestAlwaysAuthorization()
     }
     
@@ -131,7 +121,7 @@ class ViewController: UIViewController {
         UIView.animateWithDuration(duration, delay: delay, options: options, animations: animations, completion: completion)
     }
     
-    func createSearchBar() -> UIView{
+    func createSearchBar() -> UIView {
         
         let frame = CGRect(x: 0.0, y: 0.0, width: 320.0, height: 64.0)
         
@@ -187,8 +177,6 @@ extension ViewController: CLLocationManagerDelegate {
             self.view = mapView
             
             self.locationManager?.startUpdatingLocation()
-        } else {
-//            self.showAlert("Error", message: "An error has occurred")
         }
     }
     
@@ -197,7 +185,7 @@ extension ViewController: CLLocationManagerDelegate {
         self.userLatitude = newLocation.coordinate.latitude
         self.userLongitude = newLocation.coordinate.longitude
         
-        // is marker in map?
+        // Is marker in map?
         if self.markerState {
             let userPoint = CLLocationCoordinate2D(latitude: self.userLatitude!, longitude: self.userLongitude!)
             
@@ -213,12 +201,6 @@ extension ViewController: CLLocationManagerDelegate {
         }
         
         self.camera = GMSCameraPosition.cameraWithLatitude(self.userLatitude!, longitude: self.userLongitude!, zoom: self.zoom)
-        
-        if UIApplication.sharedApplication().applicationState == .Active {
-//            print("Location: \(self.userLatitude!), \(self.userLongitude!)")
-        } else {
-//            print("App is in background", newLocation)
-        }
     }
     
     func getMessage(distance: Double) -> String {
@@ -226,7 +208,9 @@ extension ViewController: CLLocationManagerDelegate {
             case 0.0..<10.0:
                 userState = .UserZoneFive
                 if shouldShow {
-                    let message = "Estas en el punto objetivo"
+                    let lat = String(self.roundValue(self.userLatitude!))
+                    let lon = String(self.roundValue(self.userLongitude!))
+                    let message = "Estas en el punto objetivo, lat: \(lat), lon: \(lon)"
                     self.showNotification(message)
                     API.postImage(self.view, message: message)
                 }

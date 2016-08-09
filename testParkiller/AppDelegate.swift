@@ -52,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
         
-        //Shows a alert if the app is in foreground
+        //Shows an alert if the app is in foreground
         let rootVC = UIApplication.sharedApplication().keyWindow?.rootViewController
         if let message = notification.alertBody{
             let alert = UIAlertController(title: "New Zone", message: message, preferredStyle: .Alert)

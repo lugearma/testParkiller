@@ -59,6 +59,7 @@ class API: NSObject {
         let accountStore = ACAccountStore()
         let accountType = accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
         
+        //Encode image
         let image = API.screenShot(view)
         let imageData = UIImageJPEGRepresentation(image, 0.9)
         let imageEnconded = imageData?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
@@ -82,7 +83,7 @@ class API: NSObject {
                             
                             API.parsingData(data, message: message)
                         } else {
-                            print("error")
+                            print("Error")
                         }
                     })
                 } else {
@@ -101,7 +102,6 @@ class API: NSObject {
         }
         do {
             let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-//            print("JSON: \n \(json)")
             if let mediaId = json["media_id_string"] as? String {
                 mediaStringID = mediaId
             } else {
