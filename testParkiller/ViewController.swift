@@ -53,6 +53,7 @@ class ViewController: UIViewController {
         
         self.userLatitude = self.locationManager?.location?.coordinate.latitude
         self.userLongitude = self.locationManager?.location?.coordinate.longitude
+        
     }
     
     func showNotification(text: String) {
@@ -119,16 +120,6 @@ class ViewController: UIViewController {
     
     func animateInformationView(duration: NSTimeInterval, delay: NSTimeInterval, options: UIViewAnimationOptions, animations: () -> Void, completion: ((Bool) -> Void)?) {
         UIView.animateWithDuration(duration, delay: delay, options: options, animations: animations, completion: completion)
-    }
-    
-    func createSearchBar() -> UIView {
-        
-        let frame = CGRect(x: 0.0, y: 0.0, width: 320.0, height: 64.0)
-        
-        let searchBar = UISearchBar(frame: frame)
-        searchBar.delegate = self
-        searchBar.placeholder = "Search place"
-        return searchBar
     }
     
     func showAlert(title: String, message: String) {
@@ -301,16 +292,6 @@ extension ViewController: GMSMapViewDelegate {
             })
     }
 }
-
-//MARK: Search Bar Delegate Methods
-
-extension ViewController: UISearchBarDelegate {
-    func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
-        print("editando texto")
-        return true
-    }
-}
-
 
 
 
